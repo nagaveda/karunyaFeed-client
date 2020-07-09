@@ -21,10 +21,10 @@ const Signin = () => {
                 password: password                
             })
         }).then(res => res.json())
-        .then(data => {
+        .then((data) => {
             console.log(data);
             if(data.error){
-                M.toast({html: data.error, classes:"#c62828 red darken-3"})
+                M.toast({html: data.error, classes:"#c62828 red darken-3"});
             }
             else{
                 localStorage.setItem("jwt", data.token);
@@ -33,9 +33,9 @@ const Signin = () => {
                 M.toast({html:"Signed in successfully!", classes:"#1de9b6 teal accent-3"})
                 history.push('/');
             }
-        }).catch(err => {
+        }).catch((err) => {
             console.log(err);
-        })
+        });
     }
     return(
         <div className="mycard">

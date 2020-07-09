@@ -35,6 +35,7 @@ const CreatePost = () => {
             });
         }
         
+        
     }, [url]);
 
     const postDetails = () => {
