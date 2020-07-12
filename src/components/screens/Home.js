@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {UserContext} from '../../App';
 import M from 'materialize-css';
+import {Link} from 'react-router-dom';
 const Home = () => {
     const [data, setData] = useState([]);
     const {state, dispatch} = useContext(UserContext);
@@ -11,7 +12,6 @@ const Home = () => {
             }
         }).then(res => res.json())
         .then(result => {
-            console.log(result);
             setData(result.posts);
         })
     },[]);
@@ -128,7 +128,7 @@ const Home = () => {
             });
             setData(newData);
             M.toast({html:"Comment deleted succesfully!", classes: "#757575 grey darken-1"});
-            
+
         }).catch(err=>{
             console.log(err);
         })
@@ -141,7 +141,7 @@ const Home = () => {
             data.map((item)=>{
                 return(
                     <div key={item._id} className="card home-card">
-                        <h5>{item.postedBy.name}{item.postedBy._id === state._id && 
+                        <h5><Link to={"/profile/"+item.postedBy._id}>{item.postedBy.name}</Link>{item.postedBy._id === state._id && 
                             <i style={{float:"right"}} className="material-icons" onClick={()=>deletePost(item._id)}>delete</i>
                              }</h5>
                         <div className="card-image">
@@ -183,7 +183,7 @@ const Home = () => {
             })
             :
             <div>
-            <span className='fa fa-spinner fa-pulse fa-3x fa-fw text-primary'></span>
+            <span className='fa fa-spinner fa-pulse fa-3x fa-fw text-primary'></span> 
                 <h1><p className="brand-logo" style={{textAlign:"center"}}>Loading...</p></h1>
                 
             </div>
