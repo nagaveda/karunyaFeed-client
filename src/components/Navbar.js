@@ -8,6 +8,7 @@ const NavBar = () => {
     if(state){
       return [
         <li><Link to="/profile">Profile</Link></li>,
+        <li><Link to="/mysubposts">Subscribed posts</Link></li>,
         <li><Link to="/create">Post</Link></li>,
         <li>
           <button className="btn waves-effect waves-light #e53935 red darken-1

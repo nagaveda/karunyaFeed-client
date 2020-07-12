@@ -9,6 +9,7 @@ import Signup from './components/screens/Signup';
 import CreatePost from './components/screens/CreatePost';
 import {reducer, initialState} from './reducers/userReducer';
 import UserProfile from './components/screens/UserProfile';
+import SubscribedPosts from './components/screens/SubcribedPosts';
 export const UserContext = createContext();
 const Routing = () => {
   const history = useHistory();
@@ -40,6 +41,9 @@ const Routing = () => {
         </Route>
         <Route path="/profile/:userId">
           <UserProfile />
+        </Route>  
+        <Route path="/mysubposts">
+          <SubscribedPosts />
         </Route>   
     </Switch>
   );
