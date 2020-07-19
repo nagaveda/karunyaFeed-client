@@ -6,13 +6,13 @@ const NavBar = () => {
   const history = useHistory();
   const renderList = () => {
     if(state){
+   
       return [
         <li><Link to="/profile">Profile</Link></li>,
         <li><Link to="/mysubposts">Subscribed posts</Link></li>,
         <li><Link to="/create">Post</Link></li>,
         <li>
-          <button className="btn waves-effect waves-light #e53935 red darken-1
-"
+          <button className="btn waves-effect waves-light #e53935 red darken-1"
               onClick = {()=>{
                 localStorage.clear();
                 dispatch({type: "CLEAR"});

@@ -10,7 +10,7 @@ const CreatePost = () => {
     const [url, setUrl] = useState("");
     useEffect(()=> {
         if(url){
-            fetch("/createpost", {
+            fetch("http://localhost:3000/createpost", {
                 method: "POST",
                 headers:{
                     "Content-Type":"application/json",
@@ -56,7 +56,7 @@ const CreatePost = () => {
         });
 
         
-    }
+    };
 
     return(
         <div className="card input-filed" 

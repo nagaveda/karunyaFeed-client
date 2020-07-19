@@ -1,6 +1,7 @@
 import React, {useEffect, createContext, useReducer, useContext} from 'react';
-import NavBar from './components/Navbar';
+import NavBar from './components/ResponsiveNavbar';
 import './App.css';
+
 import {BrowserRouter, Route, Switch, useHistory} from 'react-router-dom';
 import Home from './components/screens/Home';
 import Signin from './components/screens/Signin';
@@ -10,6 +11,8 @@ import CreatePost from './components/screens/CreatePost';
 import {reducer, initialState} from './reducers/userReducer';
 import UserProfile from './components/screens/UserProfile';
 import SubscribedPosts from './components/screens/SubcribedPosts';
+
+
 export const UserContext = createContext();
 const Routing = () => {
   const history = useHistory();
@@ -23,7 +26,8 @@ const Routing = () => {
     }
   }, [])
   return (
-    <Switch>
+    <div style={{marginTop:"100px"}}>
+        <Switch>
         <Route exact path="/">
           <Home/>
         </Route>
@@ -44,8 +48,10 @@ const Routing = () => {
         </Route>  
         <Route path="/mysubposts">
           <SubscribedPosts />
-        </Route>   
+        </Route>         
     </Switch>
+    </div>
+    
   );
 }
 
@@ -55,7 +61,7 @@ function App() {
     <UserContext.Provider value={{state, dispatch}}>
       <BrowserRouter>
         <NavBar/>
-        <Routing/>    
+        <Routing/>
       </BrowserRouter>
     </UserContext.Provider>
   );

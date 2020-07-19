@@ -8,7 +8,7 @@ const Profile = () => {
     const [showfollow, setShowFollow] = useState(state?!state.following.includes(userId):true);
 
     useEffect(()=> {
-        fetch(`/user/${userId}`, {
+        fetch(`http://localhost:3000/user/${userId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": "Bearer "+localStorage.getItem("jwt")
@@ -20,7 +20,7 @@ const Profile = () => {
     }, []);
 
     const followUser = () => {
-        fetch('/follow', {
+        fetch('http://localhost:3000/follow', {
             method:"PUT",
             headers:{
                 "Content-Type":"application/json",
@@ -48,7 +48,7 @@ const Profile = () => {
         setShowFollow(false);
     };
     const unfollowUser = () => {
-        fetch('/unfollow', {
+        fetch('http://localhost:3000/unfollow', {
             method:"PUT",
             headers:{
                 "Content-Type":"application/json",
@@ -88,7 +88,7 @@ const Profile = () => {
                 }}>
                     <div>
                         <img style={{width:"160px", height:"160px", borderRadius:"80px"}}
-                        src = "https://images.unsplash.com/photo-1550927407-50e2bd128b81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+                        src = {userProfile.user.pic}
                         alt = "profile pic"
                         />
                     </div>
@@ -100,7 +100,10 @@ const Profile = () => {
                             <h6>{userProfile.user.followers.length} followers</h6>
                             <h6>{userProfile.user.following.length} following</h6>
                         </div>
-                        {showfollow?
+                        {   
+                            !(userProfile.user._id.toString()===localStorage.getItem("userId"))
+                        ?
+                            showfollow?
                             <button style={{margin:"10px"}} className="btn waves-effect waves-light #64b5f6 blue darken-2"
                             onClick = {()=>followUser()}
                             >
@@ -112,7 +115,14 @@ const Profile = () => {
                             >
                                 Unfollow
                             </button>
+                        
+                        :
+                        <div>
+                        <h5>You need not follow yourself dude..🤔</h5>
+                        
+                        </div>
                         }
+                        
                         
                         
                     </div>
@@ -128,7 +138,7 @@ const Profile = () => {
                 </div>
             </div>
             :
-            <h2 className="brand-logo">Loading....</h2>}
+            <h1 className="brand-logo">Loading....</h1>}
                 
             </>
     );

@@ -11,7 +11,7 @@ const Signin = () => {
             M.toast({html:"Invalid email", classes:"#c62828 red darken-3"});
             return;
         }
-        fetch("/signin", {
+        fetch("http://localhost:3000/signin", {
             method: "POST",
             headers:{
                 "Content-Type":"application/json"
@@ -26,8 +26,10 @@ const Signin = () => {
                 M.toast({html: data.error, classes:"#c62828 red darken-3"});
             }
             else{
+                console.log("Test1", data);
                 localStorage.setItem("jwt", data.token);
                 localStorage.setItem("user", JSON.stringify(data.user));
+                localStorage.setItem("userId",data.user._id);
                 dispatch({type: "USER", payload: data.user});
                 M.toast({html:"Signed in successfully!", classes:"#1de9b6 teal accent-3"})
                 history.push('/');

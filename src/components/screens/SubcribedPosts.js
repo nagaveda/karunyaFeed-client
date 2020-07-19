@@ -6,7 +6,7 @@ const Home = () => {
     const [data, setData] = useState([]);
     const {state, dispatch} = useContext(UserContext);
     useEffect(()=>{
-        fetch('/getsubposts', {
+        fetch('http://localhost:3000/getsubposts', {
             headers: {
                 "Authorization" : "Bearer "+localStorage.getItem("jwt")
             }
@@ -17,7 +17,7 @@ const Home = () => {
     },[]);
     
     const likePost = (id) => {
-        fetch("/like", {
+        fetch("http://localhost:3000/like", {
             method:"PUT", 
             headers:{
                 "Content-Type":"application/json",
@@ -42,7 +42,7 @@ const Home = () => {
         });
     };
     const unlikePost = (id) => {
-        fetch("/unlike", {
+        fetch("http://localhost:3000/unlike", {
             method:"PUT", 
             headers:{
                 "Content-Type":"application/json",
@@ -66,7 +66,7 @@ const Home = () => {
         });
     };
     const makeComment = (text, postId) => {
-        fetch('/comment', {
+        fetch('http://localhost:3000/comment', {
             method:"PUT",
             headers:{
                 "Content-Type":"application/json",
@@ -92,7 +92,7 @@ const Home = () => {
         });
     };
     const deletePost = (postId) => {
-        fetch(`/deletepost/${postId}`, {
+        fetch(`http://localhost:3000/deletepost/${postId}`, {
             method:"DELETE",
             headers:{
                 "Authorization":"Bearer "+localStorage.getItem("jwt")
@@ -112,7 +112,7 @@ const Home = () => {
         })
     };
     const deleteComment = (postId, commentId) => {
-        fetch(`/deletecomment/${postId}/comments/${commentId}`, {
+        fetch(`http://localhost:3000/deletecomment/${postId}/comments/${commentId}`, {
             method:"DELETE",
             headers:{
                 "Authorization":"Bearer "+localStorage.getItem("jwt")
@@ -141,7 +141,7 @@ const Home = () => {
             data.map((item)=>{
                 return(
                     <div key={item._id} className="card home-card">
-                        <h5 style={{padding:"5px"}}><Link to={"/profile/"+item.postedBy._id}>{item.postedBy.name}</Link>{item.postedBy._id === state._id && 
+                        <h5 style={{padding:"5px"}}><Link to={"/profile/"+item.postedBy._id}><img style={{width:"30px",height:"30px", borderRadius:"20px"}} src={item.postedBy.pic}></img> {item.postedBy.name}</Link>{item.postedBy._id === state._id && 
                             <i style={{float:"right"}} className="material-icons" onClick={()=>deletePost(item._id)}>delete</i>
                              }</h5>
                         <div className="card-image">
@@ -184,7 +184,7 @@ const Home = () => {
             :
             <div>
             <span className='fa fa-spinner fa-pulse fa-3x fa-fw text-primary'></span> 
-                <h1><p className="brand-logo" style={{textAlign:"center"}}>Loading...</p></h1>
+                <h1><p className="brand-logo" style={{textAlign:"center"}}>Follow someone to view subscribed posts here...</p></h1>
                 
             </div>
             

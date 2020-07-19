@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 a{
   color: black !important;
 }
 .brand-logo, .sign {
-  font-family: 'Grand Hotel', cursive;
+  /* font-family: 'Grand Hotel', cursive; */
+  font-family: 'Indie Flower', cursive;
 }
 .mycard{
   margin-top: 30px;
@@ -46,4 +47,8 @@ a{
 }
 .material-icons:hover{
   cursor: pointer;
+}
+.mylogo , .loading{
+  font-family: 'Indie Flower', cursive;
+  
 }

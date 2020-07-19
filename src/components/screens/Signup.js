@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import M from 'materialize-css';
 const Signup = () => {
@@ -6,13 +6,36 @@ const Signup = () => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const postData = () => {
+    const [image,setImage] = useState("");
+    const [url, setUrl] = useState("https://res.cloudinary.com/nagaveda999/image/upload/v1594638348/images_ughhmp.png");
+    useEffect(()=>{
+        if(url){
+            uploadfields();
+        }
+    }, [url]);
+    const uploadPic = () => {
+        const data = new FormData();
+        data.append("file", image);
+        data.append("upload_preset", "karunyaFeed");
+        data.append("cloud_name", "nagaveda999");
+        fetch("https://api.cloudinary.com/v1_1/nagaveda999/image/upload", {
+            method: "POST",
+            body:data
+        })
+        .then(res => res.json())  
+        .then(data => {
+            setUrl(data.url);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+    const uploadfields = () =>{
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-            M.toast({html:"Invalid email", classes:"#c62828 red darken-3"});
+            M.toast({html:"Invalid email ", classes:"#c62828 red darken-3"});
             return;
         }
-  
-        fetch("/signup", {
+        fetch("http://localhost:3000/signup", {
             method: "POST",
             headers:{
                 "Content-Type":"application/json"
@@ -20,7 +43,8 @@ const Signup = () => {
             body: JSON.stringify({
                 name:name,
                 password: password,
-                email: email
+                email: email,
+                pic:url
             })
         }).then(res => res.json())
         .then(data => {
@@ -33,7 +57,16 @@ const Signup = () => {
             }
         }).catch(err => {
             console.log(err);
-        })
+        });
+    };
+    const postData = () => {
+        if(image){
+            uploadPic();
+        }
+        else{
+            uploadfields();
+        }
+       
     }
     return(
         <div className="mycard">
@@ -57,6 +90,16 @@ const Signup = () => {
                     value = {password}
                     onChange={(event)=>setPassword(event.target.value)}
                 />
+                <div className="file-field input-field">
+                <div className="btn #64b5f6 blue darken-2">
+                    <span>Upload Pic</span>
+                    <input type="file" onChange = {(event) => setImage(event.target
+                    .files[0])}/>
+                </div>
+                <div className="file-path-wrapper">
+                    <input className="file-path validate" type="text"/>
+                </div>
+                </div>
                 <button className="btn waves-effect waves-light #64b5f6 blue darken-2"
                 onClick={()=>postData()}
                 >

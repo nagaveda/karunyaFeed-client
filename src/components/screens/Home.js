@@ -1,23 +1,25 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {UserContext} from '../../App';
-import M from 'materialize-css';
+import React, { Component, useState, useContext, useEffect } from "react";
 import {Link} from 'react-router-dom';
-const Home = () => {
-    const [data, setData] = useState([]);
-    const {state, dispatch} = useContext(UserContext);
-    useEffect(()=>{
-        fetch('/allposts', {
-            headers: {
-                "Authorization" : "Bearer "+localStorage.getItem("jwt")
-            }
-        }).then(res => res.json())
-        .then(result => {
-            setData(result.posts);
-        })
-    },[]);
+import {Waypoint} from 'react-waypoint';
+import M from 'materialize-css';
+import {UserContext} from '../../App';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+
+
     
+const Home = () => {
+    const {state, dispatch} = useContext(UserContext);
+    const [page, setPage] = useState(1); 
+    const [data, setData]= useState([]);
+    const [hasNextPage, setHasNextPage] = useState(true);
+    const items = 2;
+    const [loading, setLoading] = useState(false);
+    useEffect(()=>{
+        getData();
+    },[]);
     const likePost = (id) => {
-        fetch("/like", {
+        fetch("http://localhost:3000/like", {
             method:"PUT", 
             headers:{
                 "Content-Type":"application/json",
@@ -42,7 +44,7 @@ const Home = () => {
         });
     };
     const unlikePost = (id) => {
-        fetch("/unlike", {
+        fetch("http://localhost:3000/unlike", {
             method:"PUT", 
             headers:{
                 "Content-Type":"application/json",
@@ -66,7 +68,7 @@ const Home = () => {
         });
     };
     const makeComment = (text, postId) => {
-        fetch('/comment', {
+        fetch('http://localhost:3000/comment', {
             method:"PUT",
             headers:{
                 "Content-Type":"application/json",
@@ -92,7 +94,7 @@ const Home = () => {
         });
     };
     const deletePost = (postId) => {
-        fetch(`/deletepost/${postId}`, {
+        fetch(`http://localhost:3000/deletepost/${postId}`, {
             method:"DELETE",
             headers:{
                 "Authorization":"Bearer "+localStorage.getItem("jwt")
@@ -112,7 +114,7 @@ const Home = () => {
         })
     };
     const deleteComment = (postId, commentId) => {
-        fetch(`/deletecomment/${postId}/comments/${commentId}`, {
+        fetch(`http://localhost:3000/deletecomment/${postId}/comments/${commentId}`, {
             method:"DELETE",
             headers:{
                 "Authorization":"Bearer "+localStorage.getItem("jwt")
@@ -133,17 +135,50 @@ const Home = () => {
             console.log(err);
         })
     }
-    return(
-        
-        <div className="home">
+  
+    const getData = () => {
+       if(!hasNextPage) return;  
+       
+        fetch(`http://localhost:3000/allposts?page=${page}&limit=${items}`, {
+            headers: {
+                "Authorization" : "Bearer "+localStorage.getItem("jwt")
+            }
+        })
+        .then(res=>res.json())
+        .then((result)=>{
+            if(result.results){
+                // console.log("tt",result.totalCount); 
+                // console.log("tt2", (data.length+result.results.length));
+                if(result.next == null){
+            
+                    setHasNextPage(false);
+                }
+                const newData = data.concat(result.results);
+                setData(newData);
+                setPage(page=>page+1); 
+            }
+            
+        });
+    
+    };
+
+    const loadMoreData = () => {
+        getData();
+    };
+    
+return(
+    <>
         {
             (data.length!==0)?
-            data.map((item)=>{
+            <div>
+            {
+                data.map((item)=>{
                 return(
                     <div key={item._id} className="card home-card">
-                        <h5 style={{padding:"5px"}}><Link to={"/profile/"+item.postedBy._id}>{item.postedBy.name}</Link>{item.postedBy._id === state._id && 
+                        <h5 style={{padding:"5px"}}><Link to={"/profile/"+item.postedBy._id}><img style={{width:"30px",height:"30px", borderRadius:"20px"}} src={item.postedBy.pic}></img> {item.postedBy.name}</Link>{item.postedBy._id === state._id && 
                             <i style={{float:"right"}} className="material-icons" onClick={()=>deletePost(item._id)}>delete</i>
                              }</h5>
+                        
                         <div className="card-image">
                             <img alt="post" src = {item.photo}/>
                         </div>
@@ -170,7 +205,7 @@ const Home = () => {
                             {
                                 item.comments.map((record)=> {
                                     return(
-                                    <h6 key={record._id}><span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text} {record.postedBy._id === state._id && <i style={{float:"right"}} className="material-icons" 
+                                    <h6 key={record._id}><span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text} {record.postedBy._id === state._id && <i style={{float:"right", marginLeft:"auto"}} className="material-icons" 
                         onClick = {() => {deleteComment(item._id,record._id )}}
                         >delete</i>}</h6>
                                     )
@@ -180,18 +215,26 @@ const Home = () => {
                         </div>
                     </div>
                 )
-            })
+            })}
+            {
+                hasNextPage && <Waypoint onEnter={loadMoreData}>
+                    <h1 className="loading" style={{textAlign:"center"}}>Loading Posts..<FontAwesomeIcon icon={faSpinner} spin={true}/>
+                    </h1>
+                </Waypoint>
+            }
+            </div>
+            
             :
             <div>
             <span className='fa fa-spinner fa-pulse fa-3x fa-fw text-primary'></span> 
                 <h1><p className="brand-logo" style={{textAlign:"center"}}>Loading...</p></h1>
-                
             </div>
-            
         }
-            
-        </div>
-    );
-}
+        
+    </>
+);
 
+
+}
+    
 export default Home;
